@@ -26,7 +26,11 @@ app.get('/api/movies', (req,res) => {
 });
 
 app.post('/api/add-movie', (req,res) => {
-
+  const movie = req.body.movie;
+  console.log(movie);
+  db.query(`INSERT INTO movies (movie_name) values (${movie})`, function(err, results){
+    res.json('Movie added');
+  })
 });
 
 app.post('/api/update-review', (req, res) => {

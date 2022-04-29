@@ -4,7 +4,7 @@ CREATE DATABASE movie_db;
 use movie_db;
 
 CREATE TABLE movies (
-  id INT PRIMARY KEY,
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   movie_name VARCHAR(100)
 );
 
