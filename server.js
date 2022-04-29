@@ -14,13 +14,15 @@ const db = mysql.createConnection(
     host: 'localhost',
     user: 'root',
     password: 'password',
-    database: 'books_db'
+    database: 'movie_db'
   },
-  console.log(`Connected to the books_db database.`)
+  console.log(`Connected to the movie_db database.`)
 );
 
 app.get('/api/movies', (req,res) => {
-
+  db.query('SELECT * FROM movies', function(err, results){
+    res.json(results);
+  })
 });
 
 app.post('/api/add-movie', (req,res) => {
