@@ -41,9 +41,14 @@ app.get('/api/movies/reviews', (req,res) => {
 app.post('/api/add-review', (req, res) => {
   const {movie, review} = req.body;
   db.query(`SELECT id FROM movies WHERE movie_name = ?`, movie, function(err, results) {
-    db.query(`INSERT INTO reviews (movie_id, review) values (?, ?)`, [results[0].id, review],function(err, results) {
-      res.json("Review added");
-    });
+    if(results.length == 0) {
+      res.json("Not a movie in the database");
+    }
+    else {
+      db.query(`INSERT INTO reviews (movie_id, review) values (?, ?)`, [results[0].id, review],function(err, results) {
+        res.json("Review added");
+      });
+    }
   });
 });
 
