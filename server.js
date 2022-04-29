@@ -22,23 +22,43 @@ const db = mysql.createConnection(
 app.get('/api/movies', (req,res) => {
   db.query('SELECT * FROM movies', function(err, results){
     res.json(results);
-  })
+  });
 });
 
 app.post('/api/add-movie', (req,res) => {
   const movie = req.body.movie;
-  console.log(movie);
-  db.query(`INSERT INTO movies (movie_name) values (${movie})`, function(err, results){
+  db.query(`INSERT INTO movies (movie_name) values ("${movie}")`, function(err, results){
     res.json('Movie added');
-  })
+  });
+});
+
+app.get('/api/movies/reviews', (req,res) => {
+  db.query('SELECT * FROM reviews', function(err, results){
+    res.json(results);
+  });
+});
+
+app.post('/api/add-review', (req, res) => {
+  const {movie, review} = req.body;
+  db.query(`SELECT id FROM movies WHERE movie_name = "${movie}"`, function(err, results) {
+    db.query(`INSERT INTO reviews (movie_id, review) values (${results[0].id}, "${review}")`, function(err, results) {
+      res.json("Review added");
+    });
+  });
 });
 
 app.post('/api/update-review', (req, res) => {
-
+  const{id, review} = req.body;
+  db.query(`UPDATE reviews SET review = "${review}" WHERE id = ${id}`, function(err, results) {
+    res.json("Review updated");
+  });
 });
 
 app.delete('/api/movie/:id', (req,res) => {
-
+  const id = req.params.id;
+  db.query(`DELETE FROM movies WHERE id = "${id}"`, function(err, results) {
+    res.json("Movie deleted");
+  });
 });
 
 app.use((req, res) => {
