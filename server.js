@@ -27,7 +27,7 @@ app.get('/api/movies', (req,res) => {
 
 app.post('/api/add-movie', (req,res) => {
   const movie = req.body.movie;
-  db.query(`INSERT INTO movies (movie_name) values ("${movie}")`, function(err, results){
+  db.query(`INSERT INTO movies (movie_name) values (?)`, movie, function(err, results){
     res.json('Movie added');
   });
 });
@@ -40,8 +40,8 @@ app.get('/api/movies/reviews', (req,res) => {
 
 app.post('/api/add-review', (req, res) => {
   const {movie, review} = req.body;
-  db.query(`SELECT id FROM movies WHERE movie_name = "${movie}"`, function(err, results) {
-    db.query(`INSERT INTO reviews (movie_id, review) values (${results[0].id}, "${review}")`, function(err, results) {
+  db.query(`SELECT id FROM movies WHERE movie_name = ?`, movie, function(err, results) {
+    db.query(`INSERT INTO reviews (movie_id, review) values (?, ?)`, [results[0].id, review],function(err, results) {
       res.json("Review added");
     });
   });
@@ -49,14 +49,14 @@ app.post('/api/add-review', (req, res) => {
 
 app.post('/api/update-review', (req, res) => {
   const{id, review} = req.body;
-  db.query(`UPDATE reviews SET review = "${review}" WHERE id = ${id}`, function(err, results) {
+  db.query(`UPDATE reviews SET review = ? WHERE id = ?`, [review, id], function(err, results) {
     res.json("Review updated");
   });
 });
 
 app.delete('/api/movie/:id', (req,res) => {
   const id = req.params.id;
-  db.query(`DELETE FROM movies WHERE id = "${id}"`, function(err, results) {
+  db.query(`DELETE FROM movies WHERE id = ?`, id, function(err, results) {
     res.json("Movie deleted");
   });
 });
